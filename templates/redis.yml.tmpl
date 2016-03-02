@@ -23,7 +23,7 @@ instances:
 
     # Addional connection options
     #
-    {{ $slice := coalesce $value.Env.CONNECTION ""}}
+    {{ $slice := coalesce string.Split($value.Env.CONNECTION, ",") ""}}
     {{ if not (eq $slice "")}}
      {{ $db := index $slice 0 }}
      {{ $pwd := index $slice 1 }}
