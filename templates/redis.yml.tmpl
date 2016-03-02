@@ -32,9 +32,9 @@ instances:
      {{ end }}
 
     # Optional extra tags added to all redis metrics
-    # tags:
-    #   - optional_tag1
-    #   - optional_tag2
+     tags:
+       - project: {{ $value.Env.PROJECT }} 
+       - environment: {{ $value.Env.ENVIRONMENT }} 
     #
 
     # Check the length of these keys
