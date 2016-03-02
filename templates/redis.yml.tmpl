@@ -23,10 +23,11 @@ instances:
 
     # Addional connection options
     #
-    {{ $slice := coalesce string.Split($value.Env.CONNECTION, ",") ""}}
-    {{ if not (eq $slice "")}}
-     {{ $db := index $slice 0 }}
-     {{ $pwd := index $slice 1 }}
+    {{ $tmp := coalesce $value.Env.CONNECTION ""}}
+    {{ if not (eq $tmp "")}}
+    {{ $split := split $tmp "," }}
+     {{ $db := index $split 0 }}
+     {{ $pwd := index $split 1 }}
      db: {{ $db }}
      password: {{ $pwd }}
      {{ end }}
