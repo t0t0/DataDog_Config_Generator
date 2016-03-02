@@ -1,0 +1,17 @@
+{{ range $key, $value := .}}
+{{ $service := coalesce $value.Env.SERVICE ""}}
+{{ if eq $service "nginx" }}
+{{ $port := coalesce $value.Env.VIRTPORT "" }}
+{{ if not (eq $port "") }}
+
+server {
+	listen {{ $value.Env.VIRTPORT }} ;
+  	
+	location /nginx_status {
+          stub_status on;
+        }
+
+}
+{{ end }}
+{{ end }}
+{{ end }}
