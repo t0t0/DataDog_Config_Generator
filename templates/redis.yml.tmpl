@@ -1,0 +1,64 @@
+init_config:
+
+instances:
+  {{ range $key, $value := .}}
+  {{ $service := coalesce $value.Env.SERVICE ""}}
+  {{ if eq $service "redis" }}   
+  - host: {{ $value.IP }}
+  {{ $addrLen :=  len $value.Addresses}}
+    {{/* If only 1 port exposed, use that */}}
+    {{ if eq $addrLen 1 }}
+        {{ $address := index $value.Addresses 0 }}
+        {{ $port := $address.Port}}
+    port: {{$port}}
+    {{/* If more than one port exposed, use the one matching VIRTPORT env var, falling back to standard redis port 6379 */}}
+    {{ else }}
+        {{ $port := coalesce $value.Env.VIRTPORT "6379" }}
+    port: {{$port}}
+    {{ end }}
+
+    # Can be used in lieu of host/port
+    #
+    # unix_socket_path: /var/run/redis/redis.sock # optional, can be used in lieu of host/port
+
+    # Addional connection options
+    #
+    {{ $slice := coalesce $value.Env.CONNECTION ""}}
+    {{ if not (eq $slice "")}}
+     {{ $db := $slice[0,0] }}
+     {{ $pwd := $slice[1,1] }}
+     db: {{ $db }}
+     password: {{ $pwd }}
+     {{ end }}
+
+    # Optional extra tags added to all redis metrics
+    # tags:
+    #   - optional_tag1
+    #   - optional_tag2
+    #
+
+    # Check the length of these keys
+    #
+    # keys:
+    #   - key1
+    #   - key2
+
+    # Display a warning in the info page if the keys we're tracking are missing
+    # Default: True
+    #
+    # warn_on_missing_keys: True
+
+    # Max number of entries to fetch from the slow query log
+    # By default, the check will read this value from the redis config
+    # If it's above 128, it will default to 128 due to potential increased latency
+    # to retrieve more than 128 slowlog entries every 15 seconds
+    # If you need to get more entries from the slow query logs
+    # set the value here.
+    # Warning: It may impact the performance of your redis instance
+    # slowlog-max-len: 128
+
+    # Collect INFO COMMANDSTATS output as metrics.
+    # command_stats: False
+
+    {{ end }}
+    {{ end }}
