@@ -25,8 +25,8 @@ instances:
     #
     {{ $slice := coalesce $value.Env.CONNECTION ""}}
     {{ if not (eq $slice "")}}
-     {{ $db := $slice[0] }}
-     {{ $pwd := $slice[1] }}
+     {{ $db := index $slice 0 }}
+     {{ $pwd := index $slice 1 }}
      db: {{ $db }}
      password: {{ $pwd }}
      {{ end }}
