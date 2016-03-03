@@ -1,17 +1,15 @@
-{{ range $key, $value := .}}
+{{range $host, $value := .}}
 {{ $service := coalesce $value.Env.SERVICE ""}}
-{{ if eq $service "nginx" }}
-{{ $port := coalesce $value.Env.VIRTPORT "" }}
-{{ if not (eq $port "") }}
-
+{{ if eq $service "datadog"}}
 server {
-	listen {{ $value.Env.VIRTPORT }} ;
-  	
+	listen 80;
+
 	location /nginx_status {
           stub_status on;
+          access_log off;
+ 		  allow {{ $value.IP }};
+          deny all;
         }
-
 }
-{{ end }}
 {{ end }}
 {{ end }}
