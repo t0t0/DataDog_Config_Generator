@@ -6,8 +6,8 @@
 # SSH vars
 ####
 
-REMOTE_USER_NAME ?= core
-IP ?= 52.49.229.231
+REMOTE_USER_NAME ?= 
+IP ?= 
 #full ssh connect vars
 CONNECT = $(REMOTE_USER_NAME)@$(IP)
 
