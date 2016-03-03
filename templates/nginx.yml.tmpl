@@ -14,20 +14,10 @@ instances:
  {{ range $value := .}}
  {{ $service := coalesce $value.Env.SERVICE ""}}
  {{ if eq $service "nginx" }}
- 	{{ $addrLen :=  len $value.Addresses}}
-    {{/* If only 1 port exposed, use that */}}
-    {{ if eq $addrLen 1 }}
-       	{{ $address := index $value.Addresses 0 }}
-       	{{ $port := $address.Port}}
- - nginx_status_url: {{ $value.IP }}:{{ $port}}/nginx_status/
-    {{/* If more than one port exposed, use the one matching VIRTPORT env var, falling back to standard web port 80 */}}
-    {{ else }}
-       	{{ $port := coalesce $value.Env.VIRTPORT "80" }}
- - nginx_status_url: {{ $value.IP }}:{{ $port}}/nginx_status/
-    {{ end }}  
+ - nginx_status_url: {{ $value.IP }}/nginx_status/ 
    tags:
-   - project: {{ $value.Env.PROJECT }}
-   - environment: {{ $value.Env.ENVIRONMENT }}
+   - project:{{ $value.Env.PROJECT }}
+   - environment:{{ $value.Env.ENVIRONMENT }}
 
  {{ end }}
  {{ end }}
